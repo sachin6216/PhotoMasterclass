@@ -8,7 +8,7 @@ target 'PhotoMasterclass' do
   # Pods for PhotoMasterclass
 pod 'Alamofire', '~> 4.9'
 pod 'URLImage'
-
+pod 'ReachabilitySwift'
   target 'PhotoMasterclassTests' do
     inherit! :search_paths
     # Pods for testing

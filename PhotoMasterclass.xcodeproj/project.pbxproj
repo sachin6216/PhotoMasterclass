@@ -17,12 +17,13 @@
 		045C1C0229D04E63003AC3DA /* PhotoMasterclassUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 045C1C0129D04E63003AC3DA /* PhotoMasterclassUITestsLaunchTests.swift */; };
 		045C1C1429D04F56003AC3DA /* LessonsRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 045C1C1129D04F56003AC3DA /* LessonsRow.swift */; };
 		045C1C1529D04F56003AC3DA /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 045C1C1229D04F56003AC3DA /* ContentView.swift */; };
-		045C1C1629D04F56003AC3DA /* LessonsDetails.swift in Sources */ = {isa = PBXBuildFile; fileRef = 045C1C1329D04F56003AC3DA /* LessonsDetails.swift */; };
 		045C1C1829D04F6B003AC3DA /* NetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 045C1C1729D04F6B003AC3DA /* NetworkManager.swift */; };
 		045C1C1B29D04F81003AC3DA /* LessonsItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 045C1C1929D04F81003AC3DA /* LessonsItem.swift */; };
 		045C1C1C29D04F81003AC3DA /* LessonsList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 045C1C1A29D04F81003AC3DA /* LessonsList.swift */; };
 		0479567729D062E300CC311B /* Details.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0479567629D062E300CC311B /* Details.storyboard */; };
 		0479567A29D0630B00CC311B /* LessonDetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0479567929D0630B00CC311B /* LessonDetailsViewController.swift */; };
+		047E718629D1006900D00A21 /* ItemCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 047E718529D1006900D00A21 /* ItemCache.swift */; };
+		047E718829D1052E00D00A21 /* Connectivity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 047E718729D1052E00D00A21 /* Connectivity.swift */; };
 		079800F688EE9867CC839690 /* Pods_PhotoMasterclassTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 18DA14BF7FFA26F3B472C9C0 /* Pods_PhotoMasterclassTests.framework */; };
 		3CBF346A7381ED8EE947BC5E /* Pods_PhotoMasterclass.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EF0D770C6BB3F524C9270103 /* Pods_PhotoMasterclass.framework */; };
 /* End PBXBuildFile section */
@@ -58,12 +59,13 @@
 		045C1C0129D04E63003AC3DA /* PhotoMasterclassUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoMasterclassUITestsLaunchTests.swift; sourceTree = "<group>"; };
 		045C1C1129D04F56003AC3DA /* LessonsRow.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LessonsRow.swift; sourceTree = "<group>"; };
 		045C1C1229D04F56003AC3DA /* ContentView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
-		045C1C1329D04F56003AC3DA /* LessonsDetails.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LessonsDetails.swift; sourceTree = "<group>"; };
 		045C1C1729D04F6B003AC3DA /* NetworkManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NetworkManager.swift; sourceTree = "<group>"; };
 		045C1C1929D04F81003AC3DA /* LessonsItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LessonsItem.swift; sourceTree = "<group>"; };
 		045C1C1A29D04F81003AC3DA /* LessonsList.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LessonsList.swift; sourceTree = "<group>"; };
 		0479567629D062E300CC311B /* Details.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Details.storyboard; sourceTree = "<group>"; };
 		0479567929D0630B00CC311B /* LessonDetailsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LessonDetailsViewController.swift; sourceTree = "<group>"; };
+		047E718529D1006900D00A21 /* ItemCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemCache.swift; sourceTree = "<group>"; };
+		047E718729D1052E00D00A21 /* Connectivity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Connectivity.swift; sourceTree = "<group>"; };
 		0A063A8563F095F7A4FAC1AF /* Pods-PhotoMasterclass.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PhotoMasterclass.debug.xcconfig"; path = "Target Support Files/Pods-PhotoMasterclass/Pods-PhotoMasterclass.debug.xcconfig"; sourceTree = "<group>"; };
 		0DED31DDD1D8AB5053EC3C6E /* Pods_PhotoMasterclass_PhotoMasterclassUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_PhotoMasterclass_PhotoMasterclassUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		18DA14BF7FFA26F3B472C9C0 /* Pods_PhotoMasterclassTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_PhotoMasterclassTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -162,7 +164,6 @@
 			children = (
 				0479567829D062F800CC311B /* Controller */,
 				045C1C1229D04F56003AC3DA /* ContentView.swift */,
-				045C1C1329D04F56003AC3DA /* LessonsDetails.swift */,
 				045C1C1129D04F56003AC3DA /* LessonsRow.swift */,
 				0479567629D062E300CC311B /* Details.storyboard */,
 			);
@@ -173,6 +174,8 @@
 			isa = PBXGroup;
 			children = (
 				045C1C1729D04F6B003AC3DA /* NetworkManager.swift */,
+				047E718529D1006900D00A21 /* ItemCache.swift */,
+				047E718729D1052E00D00A21 /* Connectivity.swift */,
 			);
 			path = Network;
 			sourceTree = "<group>";
@@ -458,11 +461,12 @@
 			files = (
 				045C1C1B29D04F81003AC3DA /* LessonsItem.swift in Sources */,
 				045C1C1829D04F6B003AC3DA /* NetworkManager.swift in Sources */,
+				047E718829D1052E00D00A21 /* Connectivity.swift in Sources */,
 				045C1BDF29D04E54003AC3DA /* AppDelegate.swift in Sources */,
 				045C1C1429D04F56003AC3DA /* LessonsRow.swift in Sources */,
 				045C1C1529D04F56003AC3DA /* ContentView.swift in Sources */,
 				0479567A29D0630B00CC311B /* LessonDetailsViewController.swift in Sources */,
-				045C1C1629D04F56003AC3DA /* LessonsDetails.swift in Sources */,
+				047E718629D1006900D00A21 /* ItemCache.swift in Sources */,
 				045C1C1C29D04F81003AC3DA /* LessonsList.swift in Sources */,
 				045C1BE129D04E54003AC3DA /* SceneDelegate.swift in Sources */,
 			);
