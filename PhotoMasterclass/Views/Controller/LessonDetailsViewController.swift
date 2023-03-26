@@ -12,9 +12,6 @@ import AVKit
 class LessonDetailsViewController: UIViewController {
     
     // MARK: - IBOutlets
-    // MARK: - Variables
-    var lessonsList = [LessonsItem]()
-    var currentLesson: LessonsItem?
     let scrollView: UIScrollView = {
         let scrollView = UIScrollView()
         scrollView.translatesAutoresizingMaskIntoConstraints = false
@@ -33,14 +30,14 @@ class LessonDetailsViewController: UIViewController {
         return view
     }()
     
-    let redView: UIView = {
+    let avPlayerView: UIView = {
         let view = UIView()
         view.heightAnchor.constraint(equalToConstant: 180).isActive = true
         view.backgroundColor = .red
         return view
     }()
     
-    let blueView: UIView = {
+    let briefView: UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
@@ -80,16 +77,37 @@ class LessonDetailsViewController: UIViewController {
         img.translatesAutoresizingMaskIntoConstraints = false
         return img
     }()
+    // MARK: - Variables
+    var lessonsList = [LessonsItem]()
+    var currentLesson: LessonsItem?
+
     
     // MARK: - Life cycle
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
         self.setUI()
-        self.navigationController?.navigationBar.prefersLargeTitles = false
-        self.navigationController?.navigationBar.showsLargeContentViewer = false
         self.nextButton.addTarget(self, action: #selector(btnNextAct), for: .touchUpInside)
         
+        let btn1 = UIButton()
+        btn1.setImage(UIImage.init(systemName: "chevron.left"), for: .normal)
+        btn1.frame = CGRectMake(0, 0, 30, 30)
+        btn1.setTitle(" Lessons", for: .normal)
+        btn1.setTitleColor(.systemBlue, for: .normal)
+        btn1.addTarget(self, action: #selector(btnBack), for: .touchUpInside)
+        btn1.titleLabel?.font = .systemFont(ofSize: 15)
+        self.navigationItem.leftBarButtonItem = UIBarButtonItem(customView: btn1)
+        
+        
+        
+        let btn2 = UIButton()
+        btn2.setImage(UIImage.init(systemName: "icloud.and.arrow.down"), for: .normal)
+        btn2.frame = CGRectMake(0, 0, 30, 30)
+        btn2.setTitle(" Download", for: .normal)
+        btn2.setTitleColor(.systemBlue, for: .normal)
+        btn2.titleLabel?.font = .systemFont(ofSize: 15)
+        btn2.addTarget(self, action: #selector(btnDownloadAct), for: .touchUpInside)
+        self.navigationItem.rightBarButtonItem = UIBarButtonItem(customView: btn2)
     }
     
     // MARK: - IBOutlets Action
@@ -101,12 +119,41 @@ class LessonDetailsViewController: UIViewController {
         self.currentLesson = self.lessonsList[(index ?? 0) + 1]
         self.setUI()
     }
+    @objc func btnDownloadAct() {
+        guard let item = self.currentLesson else { return }
+        ItemCache.shared.cache(item, for: item.id)
+        
+        if let item = ItemCache.shared.getItem(for: item.id) {
+            self.currentLesson = item
+            let btn2 = UIButton()
+            btn2.setImage(UIImage.init(systemName: "icloud.and.arrow.down"), for: .normal)
+            btn2.frame = CGRectMake(0, 0, 30, 30)
+            btn2.setTitle(" Saved", for: .normal)
+            btn2.setTitleColor(.systemBlue, for: .normal)
+            btn2.titleLabel?.font = .systemFont(ofSize: 15)
+            self.navigationItem.rightBarButtonItem = UIBarButtonItem(customView: btn2)
+        } else {
+            let btn2 = UIButton()
+            btn2.setImage(UIImage.init(systemName: "icloud.and.arrow.down"), for: .normal)
+            btn2.frame = CGRectMake(0, 0, 30, 30)
+            btn2.setTitle(" Download", for: .normal)
+            btn2.setTitleColor(.systemBlue, for: .normal)
+            btn2.titleLabel?.font = .systemFont(ofSize: 15)
+            btn2.addTarget(self, action: #selector(btnDownloadAct), for: .touchUpInside)
+            self.navigationItem.rightBarButtonItem = UIBarButtonItem(customView: btn2)
+        }
+    }
+    
+    @objc func btnBack() {
+        self.navigationController?.popViewController(animated: true)
+    }
+    
     // MARK: - Extra Methods
     fileprivate func setUI() {
         view.addSubview(scrollView)
         scrollView.addSubview(scrollViewContainer)
-        scrollViewContainer.addArrangedSubview(redView)
-        scrollViewContainer.addArrangedSubview(blueView)
+        scrollViewContainer.addArrangedSubview(avPlayerView)
+        scrollViewContainer.addArrangedSubview(briefView)
         
         scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
         scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
@@ -130,36 +177,38 @@ class LessonDetailsViewController: UIViewController {
         
         let player = AVPlayer(url: videoUrl)
         let playerViewController = AVPlayerViewController()
-        playerViewController.view.frame = self.redView.bounds
+        playerViewController.view.frame = self.avPlayerView.bounds
         playerViewController.player = player
         
         self.addChild(playerViewController)
-        self.redView.addSubview(playerViewController.view)
+        self.avPlayerView.addSubview(playerViewController.view)
         playerViewController.didMove(toParent: self)
     }
     func setupTitleViews(){
         self.titleLabel.text = self.currentLesson?.name
         self.subtitleLabel.text = self.currentLesson?.description
-        self.blueView.addSubview(titleLabel)
-        titleLabel.topAnchor.constraint(equalTo: self.blueView.topAnchor, constant: 20).isActive = true
-        titleLabel.leadingAnchor.constraint(equalTo: self.blueView.leadingAnchor, constant: 20).isActive = true
-        titleLabel.trailingAnchor.constraint(equalTo: self.blueView.trailingAnchor, constant: -20).isActive = true
         
-        self.blueView.addSubview(subtitleLabel)
+        self.briefView.addSubview(titleLabel)
+        
+        titleLabel.topAnchor.constraint(equalTo: self.briefView.topAnchor, constant: 20).isActive = true
+        titleLabel.leadingAnchor.constraint(equalTo: self.briefView.leadingAnchor, constant: 20).isActive = true
+        titleLabel.trailingAnchor.constraint(equalTo: self.briefView.trailingAnchor, constant: -20).isActive = true
+        
+        self.briefView.addSubview(subtitleLabel)
         subtitleLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 25).isActive = true
-        subtitleLabel.leadingAnchor.constraint(equalTo: self.blueView.leadingAnchor, constant: 20).isActive = true
-        subtitleLabel.trailingAnchor.constraint(equalTo: self.blueView.trailingAnchor, constant: -20).isActive = true
+        subtitleLabel.leadingAnchor.constraint(equalTo: self.briefView.leadingAnchor, constant: 20).isActive = true
+        subtitleLabel.trailingAnchor.constraint(equalTo: self.briefView.trailingAnchor, constant: -20).isActive = true
         
-        self.blueView.addSubview(nextButton)
+        self.briefView.addSubview(nextButton)
         nextButton.topAnchor.constraint(equalTo: subtitleLabel.bottomAnchor, constant: 20).isActive = true
-        nextButton.trailingAnchor.constraint(equalTo: blueView.trailingAnchor, constant: -15).isActive = true
-        nextButton.bottomAnchor.constraint(equalTo: self.blueView.bottomAnchor).isActive = true
+        nextButton.trailingAnchor.constraint(equalTo: briefView.trailingAnchor, constant: -15).isActive = true
+        nextButton.bottomAnchor.constraint(equalTo: self.briefView.bottomAnchor).isActive = true
         nextButton.heightAnchor.constraint(equalToConstant: 35).isActive = true
         nextButton.widthAnchor.constraint(equalToConstant: 120).isActive = true
         
         self.nextButton.addSubview(nextImg)
         self.nextImg.centerYAnchor.constraint(equalTo: nextButton.centerYAnchor, constant: 0).isActive = true
-        self.nextImg.trailingAnchor.constraint(equalTo: blueView.trailingAnchor, constant: -20).isActive = true
+        self.nextImg.trailingAnchor.constraint(equalTo: briefView.trailingAnchor, constant: -20).isActive = true
         
         
     }

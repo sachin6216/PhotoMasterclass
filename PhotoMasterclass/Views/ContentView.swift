@@ -16,7 +16,7 @@ struct ContentView : View {
 					Text("Loading ...")
 				} else {
                     List(networkManager.lessonsList.lessons) { lessons in
-                        NavigationLink(destination: MyLessonDetailsViewController(lessonsList: networkManager.lessonsList.lessons, currentLesson: lessons)) {
+                        NavigationLink(destination: MyLessonDetailsViewController(lessonsList: networkManager.lessonsList.lessons, currentLesson: lessons).navigationBarHidden(true)) {
                             LessonsRow(singleLesson: lessons)
 						}
                     }
@@ -39,15 +39,15 @@ struct MyLessonDetailsViewController: UIViewControllerRepresentable {
     var lessonsList = [LessonsItem]()
     var currentLesson: LessonsItem?
 
-    func makeUIViewController(context: Context) -> LessonDetailsViewController {
+    func makeUIViewController(context: Context) -> UINavigationController {
         let nextVc = UIStoryboard(name: "Details", bundle: nil).instantiateViewController(identifier: "LessonDetailsViewController") as! LessonDetailsViewController
         nextVc.lessonsList = self.lessonsList
         nextVc.currentLesson = self.currentLesson
-        return nextVc
+        return UINavigationController.init(rootViewController: nextVc) //nextVc
     }
     
-    func updateUIViewController(_ uiViewController: LessonDetailsViewController, context: Context) {
+    func updateUIViewController(_ uiViewController: UINavigationController, context: Context) {
     }
     
-    typealias UIViewControllerType = LessonDetailsViewController
+    typealias UIViewControllerType = UINavigationController
 }

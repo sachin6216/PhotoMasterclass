@@ -31,14 +31,21 @@ class NetworkManager: ObservableObject {
 	}
 	
 	private func loadDataByAlamofire() {
-		Alamofire.request("\(api_url_base)")
-			.responseJSON{ response in
-				guard let data = response.data else { return }
-				let lessonResponse = try! JSONDecoder().decode(LessonsList.self, from: data)
-				DispatchQueue.main.async {
-					self.lessonsList = lessonResponse
-					self.loading = false
-				}
-		}
+        if Connectivity.isConnectedToInternet {
+            Alamofire.request("\(api_url_base)")
+                .responseJSON{ response in
+                    guard let data = response.data else { return }
+                    let lessonResponse = try! JSONDecoder().decode(LessonsList.self, from: data)
+                    DispatchQueue.main.async {
+                        self.lessonsList = lessonResponse
+                        self.loading = false
+                    }
+            }
+        } else {
+            
+//            let data = LessonsList.init(lessons: [.init(id: ItemCache.shared.getItem(for: 950)?.id ?? 0, name: ItemCache.shared.getItem(for: 950)?.name ?? "", description: ItemCache.shared.getItem(for: 950)?.description ?? "", thumbnail: ItemCache.shared.getItem(for: 950)?.thumbnail ?? "", video_url: ItemCache.shared.getItem(for: 950)?.video_url) ?? ""])
+//            self.lessonsList = data
+        }
+		
 	}
 }
