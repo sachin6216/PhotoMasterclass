@@ -20,19 +20,21 @@ final class PhotoMasterclassTests: XCTestCase {
     
     
      func testAPICallSucess() {
+         // Success test case for Get All lesson API URL working or not correct
           let api_url_base = "https://iphonephotographyschool.com/test-api/lessons"
          guard let url = URL(string: "\(api_url_base)") else { return }
          var urlRequest = URLRequest(url: url)
          urlRequest.cachePolicy = .returnCacheDataElseLoad
          
          URLSession.shared.dataTask(with: urlRequest){ (data, response, error) in
-             XCTAssertNil(error == nil) // error should be nil - Positive case
+             XCTAssertTrue(error == nil) // error should be nil - Positive case
          }.resume()
          
     }
     
     
     func testAPICallFailed(){
+        // Failed test case for Get All lesson API URL working or not correct
         let api_url_base = "https://iphonephotographyschool.com/test-api/lesso"
        guard let url = URL(string: "\(api_url_base)") else { return }
        var urlRequest = URLRequest(url: url)
@@ -46,6 +48,7 @@ final class PhotoMasterclassTests: XCTestCase {
     
     
     func testDownloadLinkValid(){
+        // Success test case for check download hanling and URL is working correct or not
         let data = LessonsItem.init(id: 1, name: "test1", description: "lorem", thumbnail: "", video_url: "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4")
       
         XCTAssertTrue((data.video_url).canOpenURL() == true) // Url is valid - Positive case
@@ -58,6 +61,7 @@ final class PhotoMasterclassTests: XCTestCase {
     }
     
     func testDownloadLinkNotValid(){
+        // Failed test case for check download hanling and URL is working correct or not
         let data = LessonsItem.init(id: 1, name: "test1", description: "lorem", thumbnail: "", video_url: "sdf")
       
         XCTAssertTrue((data.video_url).canOpenURL() == false) // Url is valid - negetive case
@@ -65,22 +69,6 @@ final class PhotoMasterclassTests: XCTestCase {
         downloadFileAsync(url: urlResquest, item: data, completionHanlder: { _,_ in
             
         })
-    }
-    
-
-    func testExample() throws {
-        // This is an example of a functional test case.
-        // Use XCTAssert and related functions to verify your tests produce the correct results.
-        // Any test you write for XCTest can be annotated as throws and async.
-        // Mark your test throws to produce an unexpected failure when your test encounters an uncaught error.
-        // Mark your test async to allow awaiting for asynchronous code to complete. Check the results with assertions afterwards.
-    }
-
-    func testPerformanceExample() throws {
-        // This is an example of a performance test case.
-        self.measure {
-            // Put the code you want to measure the time of here.
-        }
     }
 
 }
