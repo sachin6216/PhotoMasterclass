@@ -1,6 +1,4 @@
 PODS:
-  - Alamofire (4.9.1)
-  - ReachabilitySwift (5.0.0)
   - URLImage (2.2.5):
     - URLImage/Common (= 2.2.5)
     - URLImage/DownloadManager (= 2.2.5)
@@ -22,21 +20,15 @@ PODS:
   - URLImage/RemoteContentView (2.2.5)
 
 DEPENDENCIES:
-  - Alamofire (~> 4.9)
-  - ReachabilitySwift
   - URLImage
 
 SPEC REPOS:
   trunk:
-    - Alamofire
-    - ReachabilitySwift
     - URLImage
 
 SPEC CHECKSUMS:
-  Alamofire: 85e8a02c69d6020a0d734f6054870d7ecb75cf18
-  ReachabilitySwift: 985039c6f7b23a1da463388634119492ff86c825
   URLImage: 36a66c03ba2a9ccbbf06bc83431f2cef171008e8
 
-PODFILE CHECKSUM: 5ecf2ea9369a0011954e766a91f658b1cb27c853
+PODFILE CHECKSUM: f48ab9c3b4b4b37406915e3806ab85a8a0da8c62
 
 COCOAPODS: 1.12.0

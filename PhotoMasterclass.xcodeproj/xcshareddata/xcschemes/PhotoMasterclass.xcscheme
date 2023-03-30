@@ -20,6 +20,20 @@
                ReferencedContainer = "container:PhotoMasterclass.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "NO"
+            buildForArchiving = "NO"
+            buildForAnalyzing = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "045C1BF029D04E63003AC3DA"
+               BuildableName = "PhotoMasterclassTests.xctest"
+               BlueprintName = "PhotoMasterclassTests"
+               ReferencedContainer = "container:PhotoMasterclass.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
       </BuildActionEntries>
    </BuildAction>
    <TestAction
