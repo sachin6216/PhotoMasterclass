@@ -16,9 +16,14 @@ struct ContentView : View {
 					Text("Loading ...")
 				} else {
                     List(networkManager.lessonsList.lessons) { lessons in
-                        NavigationLink(destination: MyLessonDetailsViewController(lessonsList: networkManager.lessonsList.lessons, currentLesson: lessons).navigationBarHidden(true)) {
-                            LessonsRow(singleLesson: lessons)
-						}
+                        if #available(iOS 14.0, *) {
+                            NavigationLink(destination: self.nextVc(itemLesson: lessons).navigationBarTitleDisplayMode(.inline)) {
+                                
+                                LessonsRow(singleLesson: lessons)
+                            }
+                        } else {
+                            // Fallback on earlier versions
+                        }
                     }
                     .listStyle(.plain)
 				}
@@ -26,6 +31,9 @@ struct ContentView : View {
 			.navigationBarTitle(Text("Lessons"))
 		}
 	}
+    func nextVc(itemLesson: LessonsItem) -> MyLessonDetailsViewController {
+        MyLessonDetailsViewController(lessonsList: networkManager.lessonsList.lessons, currentLesson: itemLesson)
+    }
 }
 
 #if DEBUG
@@ -39,15 +47,15 @@ struct MyLessonDetailsViewController: UIViewControllerRepresentable {
     var lessonsList = [LessonsItem]()
     var currentLesson: LessonsItem?
 
-    func makeUIViewController(context: Context) -> UINavigationController {
+    func makeUIViewController(context: Context) -> LessonDetailsViewController {
         let nextVc = UIStoryboard(name: "Details", bundle: nil).instantiateViewController(identifier: "LessonDetailsViewController") as! LessonDetailsViewController
         nextVc.lessonsList = self.lessonsList
         nextVc.currentLesson = self.currentLesson
-        return UINavigationController.init(rootViewController: nextVc) //nextVc
+        return nextVc
     }
     
-    func updateUIViewController(_ uiViewController: UINavigationController, context: Context) {
+    func updateUIViewController(_ uiViewController: LessonDetailsViewController, context: Context) {
     }
     
-    typealias UIViewControllerType = UINavigationController
+    typealias UIViewControllerType = LessonDetailsViewController
 }

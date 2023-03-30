@@ -3,11 +3,15 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 56;
+	objectVersion = 55;
 	objects = {
 
 /* Begin PBXBuildFile section */
 		00FD000730EC9576122C01CA /* Pods_PhotoMasterclass_PhotoMasterclassUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0DED31DDD1D8AB5053EC3C6E /* Pods_PhotoMasterclass_PhotoMasterclassUITests.framework */; };
+		0424C1D929D23341000ECF3C /* OfflineLessons.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 0424C1D729D23341000ECF3C /* OfflineLessons.xcdatamodeld */; };
+		0424C1DA29D23341000ECF3C /* OfflineLessons.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 0424C1D729D23341000ECF3C /* OfflineLessons.xcdatamodeld */; };
+		0424C1DB29D23341000ECF3C /* OfflineLessons.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 0424C1D729D23341000ECF3C /* OfflineLessons.xcdatamodeld */; };
+		0424C1DD29D23380000ECF3C /* DatabaseHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0424C1DC29D23380000ECF3C /* DatabaseHelper.swift */; };
 		045C1BDF29D04E54003AC3DA /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 045C1BDE29D04E54003AC3DA /* AppDelegate.swift */; };
 		045C1BE129D04E54003AC3DA /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 045C1BE029D04E54003AC3DA /* SceneDelegate.swift */; };
 		045C1BE829D04E62003AC3DA /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 045C1BE729D04E62003AC3DA /* Assets.xcassets */; };
@@ -46,6 +50,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		0424C1D829D23341000ECF3C /* OfflineLessons.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = OfflineLessons.xcdatamodel; sourceTree = "<group>"; };
+		0424C1DC29D23380000ECF3C /* DatabaseHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DatabaseHelper.swift; sourceTree = "<group>"; };
 		045C1BDB29D04E54003AC3DA /* PhotoMasterclass.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PhotoMasterclass.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		045C1BDE29D04E54003AC3DA /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		045C1BE029D04E54003AC3DA /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -105,6 +111,22 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		0424C1D129D23135000ECF3C /* Helper Class */ = {
+			isa = PBXGroup;
+			children = (
+				0424C1D229D23140000ECF3C /* Core Data */,
+			);
+			path = "Helper Class";
+			sourceTree = "<group>";
+		};
+		0424C1D229D23140000ECF3C /* Core Data */ = {
+			isa = PBXGroup;
+			children = (
+				0424C1DC29D23380000ECF3C /* DatabaseHelper.swift */,
+			);
+			path = "Core Data";
+			sourceTree = "<group>";
+		};
 		045C1BD229D04E53003AC3DA = {
 			isa = PBXGroup;
 			children = (
@@ -130,12 +152,14 @@
 		045C1BDD29D04E54003AC3DA /* PhotoMasterclass */ = {
 			isa = PBXGroup;
 			children = (
+				0424C1D129D23135000ECF3C /* Helper Class */,
 				045C1C1029D04F2D003AC3DA /* Model */,
 				045C1C0F29D04F22003AC3DA /* Network */,
 				045C1C0E29D04F15003AC3DA /* Views */,
 				045C1BDE29D04E54003AC3DA /* AppDelegate.swift */,
 				045C1BE029D04E54003AC3DA /* SceneDelegate.swift */,
 				045C1BE729D04E62003AC3DA /* Assets.xcassets */,
+				0424C1D729D23341000ECF3C /* OfflineLessons.xcdatamodeld */,
 				045C1BE929D04E62003AC3DA /* LaunchScreen.storyboard */,
 				045C1BEC29D04E62003AC3DA /* Info.plist */,
 			);
@@ -305,7 +329,7 @@
 				};
 			};
 			buildConfigurationList = 045C1BD629D04E53003AC3DA /* Build configuration list for PBXProject "PhotoMasterclass" */;
-			compatibilityVersion = "Xcode 14.0";
+			compatibilityVersion = "Xcode 13.0";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
@@ -462,6 +486,8 @@
 				045C1C1B29D04F81003AC3DA /* LessonsItem.swift in Sources */,
 				045C1C1829D04F6B003AC3DA /* NetworkManager.swift in Sources */,
 				047E718829D1052E00D00A21 /* Connectivity.swift in Sources */,
+				0424C1D929D23341000ECF3C /* OfflineLessons.xcdatamodeld in Sources */,
+				0424C1DD29D23380000ECF3C /* DatabaseHelper.swift in Sources */,
 				045C1BDF29D04E54003AC3DA /* AppDelegate.swift in Sources */,
 				045C1C1429D04F56003AC3DA /* LessonsRow.swift in Sources */,
 				045C1C1529D04F56003AC3DA /* ContentView.swift in Sources */,
@@ -477,6 +503,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				045C1BF629D04E63003AC3DA /* PhotoMasterclassTests.swift in Sources */,
+				0424C1DA29D23341000ECF3C /* OfflineLessons.xcdatamodeld in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -485,6 +512,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				045C1C0229D04E63003AC3DA /* PhotoMasterclassUITestsLaunchTests.swift in Sources */,
+				0424C1DB29D23341000ECF3C /* OfflineLessons.xcdatamodeld in Sources */,
 				045C1C0029D04E63003AC3DA /* PhotoMasterclassUITests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -642,6 +670,8 @@
 				INFOPLIST_FILE = PhotoMasterclass/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
+				INFOPLIST_KEY_UIRequiredDeviceCapabilities = armv7;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -670,6 +700,8 @@
 				INFOPLIST_FILE = PhotoMasterclass/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
+				INFOPLIST_KEY_UIRequiredDeviceCapabilities = armv7;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -802,6 +834,19 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		0424C1D729D23341000ECF3C /* OfflineLessons.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				0424C1D829D23341000ECF3C /* OfflineLessons.xcdatamodel */,
+			);
+			currentVersion = 0424C1D829D23341000ECF3C /* OfflineLessons.xcdatamodel */;
+			path = OfflineLessons.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
 	};
 	rootObject = 045C1BD329D04E53003AC3DA /* Project object */;
 }

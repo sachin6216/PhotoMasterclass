@@ -8,10 +8,12 @@
 import UIKit
 import AVFoundation
 import AVKit
+import SwiftUI
 
 class LessonDetailsViewController: UIViewController {
     
     // MARK: - IBOutlets
+    var rightBarBtn = UIButton()
     let scrollView: UIScrollView = {
         let scrollView = UIScrollView()
         scrollView.translatesAutoresizingMaskIntoConstraints = false
@@ -80,36 +82,23 @@ class LessonDetailsViewController: UIViewController {
     // MARK: - Variables
     var lessonsList = [LessonsItem]()
     var currentLesson: LessonsItem?
-
+//    var completion: (String?, Error?) -> Void?
+    var isDownloading = false
     
     // MARK: - Life cycle
+    
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
         self.setUI()
         self.nextButton.addTarget(self, action: #selector(btnNextAct), for: .touchUpInside)
-        
-        let btn1 = UIButton()
-        btn1.setImage(UIImage.init(systemName: "chevron.left"), for: .normal)
-        btn1.frame = CGRectMake(0, 0, 30, 30)
-        btn1.setTitle(" Lessons", for: .normal)
-        btn1.setTitleColor(.systemBlue, for: .normal)
-        btn1.addTarget(self, action: #selector(btnBack), for: .touchUpInside)
-        btn1.titleLabel?.font = .systemFont(ofSize: 15)
-        self.navigationItem.leftBarButtonItem = UIBarButtonItem(customView: btn1)
-        
-        
-        
-        let btn2 = UIButton()
-        btn2.setImage(UIImage.init(systemName: "icloud.and.arrow.down"), for: .normal)
-        btn2.frame = CGRectMake(0, 0, 30, 30)
-        btn2.setTitle(" Download", for: .normal)
-        btn2.setTitleColor(.systemBlue, for: .normal)
-        btn2.titleLabel?.font = .systemFont(ofSize: 15)
-        btn2.addTarget(self, action: #selector(btnDownloadAct), for: .touchUpInside)
-        self.navigationItem.rightBarButtonItem = UIBarButtonItem(customView: btn2)
+        self.rightBarBtn.addTarget(self, action: #selector(btnDownloadAct), for: .touchUpInside)
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        setUIForOffline()
+    }
     // MARK: - IBOutlets Action
     @objc func btnNextAct() {
         let index = self.lessonsList.firstIndex(where: {$0.id == self.currentLesson?.id})
@@ -118,38 +107,23 @@ class LessonDetailsViewController: UIViewController {
         }
         self.currentLesson = self.lessonsList[(index ?? 0) + 1]
         self.setUI()
+        self.setUIForOffline()
     }
+    
     @objc func btnDownloadAct() {
-        guard let item = self.currentLesson else { return }
-        ItemCache.shared.cache(item, for: item.id)
-        
-        if let item = ItemCache.shared.getItem(for: item.id) {
-            self.currentLesson = item
-            let btn2 = UIButton()
-            btn2.setImage(UIImage.init(systemName: "icloud.and.arrow.down"), for: .normal)
-            btn2.frame = CGRectMake(0, 0, 30, 30)
-            btn2.setTitle(" Saved", for: .normal)
-            btn2.setTitleColor(.systemBlue, for: .normal)
-            btn2.titleLabel?.font = .systemFont(ofSize: 15)
-            self.navigationItem.rightBarButtonItem = UIBarButtonItem(customView: btn2)
+        if self.isDownloading {
+            self.isDownloading = false
+            self.cancel()
         } else {
-            let btn2 = UIButton()
-            btn2.setImage(UIImage.init(systemName: "icloud.and.arrow.down"), for: .normal)
-            btn2.frame = CGRectMake(0, 0, 30, 30)
-            btn2.setTitle(" Download", for: .normal)
-            btn2.setTitleColor(.systemBlue, for: .normal)
-            btn2.titleLabel?.font = .systemFont(ofSize: 15)
-            btn2.addTarget(self, action: #selector(btnDownloadAct), for: .touchUpInside)
-            self.navigationItem.rightBarButtonItem = UIBarButtonItem(customView: btn2)
+            guard let item = self.currentLesson else { return }
+            guard let urlResquest = URL.init(string: item.video_url) else { return }
+            downloadFileAsync(url: urlResquest, item: item)
         }
+        
     }
-    
-    @objc func btnBack() {
-        self.navigationController?.popViewController(animated: true)
-    }
-    
     // MARK: - Extra Methods
     fileprivate func setUI() {
+
         view.addSubview(scrollView)
         scrollView.addSubview(scrollViewContainer)
         scrollViewContainer.addArrangedSubview(avPlayerView)
@@ -212,6 +186,116 @@ class LessonDetailsViewController: UIViewController {
         
         
     }
+    
+    fileprivate func setRightNavBarBtn(title: String, systemNameIcon: String) {
+        self.rightBarBtn.setImage(UIImage.init(systemName: systemNameIcon), for: .normal)
+        self.rightBarBtn.setTitle(" \(title)", for: .normal)
+        self.rightBarBtn.setTitleColor(.systemBlue, for: .normal)
+        self.rightBarBtn.titleLabel?.font = .systemFont(ofSize: 15)
+        rightBarBtn.translatesAutoresizingMaskIntoConstraints = false
+        
+        self.scrollViewContainer.addSubview(self.rightBarBtn)
+        self.rightBarBtn.isHidden = false
+        rightBarBtn.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20).isActive = true
+//        rightBarBtn.topAnchor.constraint(equalTo: scrollViewContainer.topAnchor, constant: -30).isActive = true
+        self.scrollViewContainer.bringSubviewToFront(rightBarBtn)
+    }
+    fileprivate func setUIForOffline() {
+        DispatchQueue.main.async {
+            if DatabaseHelper.shareInstance.getLessonData().count == 0 {
+                self.setRightNavBarBtn(title: "Download", systemNameIcon: "icloud.and.arrow.down")
+            } else {
+                DatabaseHelper.shareInstance.getLessonData().forEach { item in
+                    if item.id == "\(self.currentLesson?.id ?? -1)" {
+                        self.currentLesson?.video_url = item.videoUrl ?? ""
+                        self.currentLesson?.thumbnail = item.thumbnail ?? ""
+                        self.currentLesson?.name = item.name ?? ""
+                        self.currentLesson?.description = item.lessonsDescription ?? ""
+                        self.currentLesson?.id = Int(item.id ?? "-2") ?? -2
+                        self.setUI()
+                        if self.isDownloading == false {
+                            self.rightBarBtn.isHidden = true
+                        } else {
+                            self.setRightNavBarBtn(title: "Cancel", systemNameIcon: "xmark.circle")
+                        }
+                    } else {
+                        self.setRightNavBarBtn(title: "Download", systemNameIcon: "icloud.and.arrow.down")
+                    }
+                }
+            }
+        }
+    }
     // MARK: - APIs
+    // MARK: Download File With asynchronous
+    func downloadFileAsync(url: URL,item: LessonsItem) {
+        let documentsUrl =  FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
+        let destinationUrl = documentsUrl.appendingPathComponent(url.lastPathComponent)
+        if FileManager().fileExists(atPath: destinationUrl.path) {
+            print("File already exists [\(destinationUrl.path)]")
+//            completion(destinationUrl.path, nil)
+            self.saveToOffline(destinationUrl.path, item: item)
+
+        } else {
+            self.setRightNavBarBtn(title: "Cancel", systemNameIcon: "xmark.circle")
+            self.isDownloading = true
+            let config = URLSessionConfiguration.background(withIdentifier: "id-background")
+            let session = URLSession(configuration: config, delegate: self, delegateQueue: nil)
+            var request = URLRequest(url: url)
+            request.httpMethod = "GET"
+            task = URLSession.shared.dataTask(with: request, completionHandler: { data, response, error in
+                if error == nil {
+                    if let response = response as? HTTPURLResponse {
+                        self.isDownloading = false
+                        print("Saved!!!")
+                        if response.statusCode == 200 {
+                            if let data = data {
+                                if let _ = try? data.write(to: destinationUrl, options: Data.WritingOptions.atomic) {
+//                                    completion(destinationUrl.path, error)
+                                    self.saveToOffline(destinationUrl.path, item: item)
+                                } else {
+//                                    completion(destinationUrl.path, error)
+                                    self.saveToOffline(destinationUrl.path, item: item)
+                                }
+                            } else {
+//                                completion(destinationUrl.path, error)
+                                self.saveToOffline(destinationUrl.path, item: item)
+                            }
+                        }
+                    }
+                } else {
+//                    completion(destinationUrl.path, error)
+//                    self.saveToOffline(destinationUrl.path, item: item)
+                }
+            })
+            task?.resume()
+        }
+    }
+
+
+    func cancel() {
+        task?.cancel()
+        setRightNavBarBtn(title: "Download", systemNameIcon: "icloud.and.arrow.down")
+    }
+    fileprivate func saveToOffline(_ urlPath: String?, item: LessonsItem) {
+        print("URL Path-\(urlPath!)")
+        let dict = ["id" : "\(item.id)",
+                    "name" : item.name,
+                    "lessonsDescription" : item.description,
+                    "thumbnail" : item.thumbnail,
+                    "videoUrl" : item.video_url
+        ]
+        
+        print("Dict:- \(dict)")
+        DatabaseHelper.shareInstance.save(object: dict)
+        self.setUIForOffline()
+    }
 }
 // MARK: - Extensions
+extension LessonDetailsViewController: URLSessionDelegate {
+    func urlSession(_ session: URLSession, didReceive challenge: URLAuthenticationChallenge, completionHandler: @escaping (URLSession.AuthChallengeDisposition, URLCredential?) -> Void) {
+        print("Saved Delegate call!!!")
+    }
+    func urlSessionDidFinishEvents(forBackgroundURLSession session: URLSession) {
+        print("Saved Delegate call!!!")
+    }
+}
