@@ -16,6 +16,7 @@ class DatabaseHelper {
     static var shareInstance = DatabaseHelper()
     let context = (UIApplication.shared.delegate as? AppDelegate)?.persistentContainer.viewContext
     
+    /// Save entry into database
     func save(object: [String:String]){
         let lesson = NSEntityDescription.insertNewObject(forEntityName: "LessonsModal", into: context!) as! LessonsModal
         lesson.id = object["id"]
@@ -29,7 +30,7 @@ class DatabaseHelper {
             print("Data is not save.")
         }
     }
-    
+    /// Get all data from database
     func getLessonData() -> [LessonsModal] {
         var lesson = [LessonsModal]()
         let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: "LessonsModal")
@@ -42,35 +43,16 @@ class DatabaseHelper {
         
     }
     
-    func deleteData(index: Int) -> [LessonsModal] {
+    /// Delete data from database
+    func deleteData(itemID: Int) {
         var lesson = getLessonData()
-        context?.delete(lesson[index])
-        lesson.remove(at: index)
+        context?.delete(lesson[itemID])
+        lesson.remove(at: itemID)
         do {
             try context?.save()
             
         }catch{
-            
             print("Can not data delete")
-        }
-        return lesson
-    }
-    
-    func editData(object: [String:String], i: Int) {
-        let lesson = getLessonData()
-        lesson[i].id = object["id"]
-        lesson[i].name = object["name"]
-        lesson[i].lessonsDescription = object["lessonsDescription"]
-        lesson[i].thumbnail = object["thumbnail"]
-        lesson[i].videoUrl = object["videoUrl"]
-
-        do {
-            
-            try context?.save()
-            
-        }catch{
-            
-            print("Data is not edit data.")
         }
     }
 }

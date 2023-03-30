@@ -23,6 +23,10 @@ struct ContentView : View {
                             }
                         } else {
                             // Fallback on earlier versions
+                            NavigationLink(destination: self.nextVc(itemLesson: lessons).navigationBarTitle(Text("Lessons"), displayMode: .inline)) {
+                                
+                                LessonsRow(singleLesson: lessons)
+                            }
                         }
                     }
                     .listStyle(.plain)

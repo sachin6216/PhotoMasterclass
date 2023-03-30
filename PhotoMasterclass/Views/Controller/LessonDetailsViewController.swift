@@ -82,7 +82,6 @@ class LessonDetailsViewController: UIViewController {
     // MARK: - Variables
     var lessonsList = [LessonsItem]()
     var currentLesson: LessonsItem?
-//    var completion: (String?, Error?) -> Void?
     var isDownloading = false
     
     // MARK: - Life cycle
@@ -94,10 +93,14 @@ class LessonDetailsViewController: UIViewController {
         self.setUI()
         self.nextButton.addTarget(self, action: #selector(btnNextAct), for: .touchUpInside)
         self.rightBarBtn.addTarget(self, action: #selector(btnDownloadAct), for: .touchUpInside)
+        
     }
     
     override func viewWillAppear(_ animated: Bool) {
         setUIForOffline()
+    }
+    override func viewWillDisappear(_ animated: Bool) {
+        self.rightBarBtn.isHidden = true
     }
     // MARK: - IBOutlets Action
     @objc func btnNextAct() {
@@ -111,19 +114,32 @@ class LessonDetailsViewController: UIViewController {
     }
     
     @objc func btnDownloadAct() {
+//        if self.isDownloading == false {
+//            self.rightBarBtn.isHidden = true
+//        } else {
+//            self.setRightNavBarBtn(title: "Cancel", systemNameIcon: "xmark.circle")
+//        }
+//
+        
         if self.isDownloading {
             self.isDownloading = false
             self.cancel()
         } else {
             guard let item = self.currentLesson else { return }
             guard let urlResquest = URL.init(string: item.video_url) else { return }
-            downloadFileAsync(url: urlResquest, item: item)
+            self.setRightNavBarBtn(title: "Cancel", systemNameIcon: "xmark.circle")
+            self.isDownloading = true
+            downloadFileAsync(url: urlResquest, item: item, completionHanlder: { (pathUrl, item) in
+                self.isDownloading = false
+                self.saveToOffline(pathUrl, item: item)
+            })
         }
         
     }
     // MARK: - Extra Methods
+    /// Set scroll and sub-view programmatically
     fileprivate func setUI() {
-
+        
         view.addSubview(scrollView)
         scrollView.addSubview(scrollViewContainer)
         scrollViewContainer.addArrangedSubview(avPlayerView)
@@ -144,6 +160,8 @@ class LessonDetailsViewController: UIViewController {
         self.setupTitleViews()
         
     }
+    
+    /// Set AVPlayer and Play video  programmatically
     fileprivate func setUIAvPlayer() {
         guard let videoUrl = URL.init(string: self.currentLesson?.video_url ?? "") else {
             print("Link failed!")
@@ -158,6 +176,8 @@ class LessonDetailsViewController: UIViewController {
         self.avPlayerView.addSubview(playerViewController.view)
         playerViewController.didMove(toParent: self)
     }
+    
+    /// Set  title and tesciption of the video programmatically
     func setupTitleViews(){
         self.titleLabel.text = self.currentLesson?.name
         self.subtitleLabel.text = self.currentLesson?.description
@@ -186,20 +206,22 @@ class LessonDetailsViewController: UIViewController {
         
         
     }
-    
+    /// Set  right navigation bar item programmatically
     fileprivate func setRightNavBarBtn(title: String, systemNameIcon: String) {
         self.rightBarBtn.setImage(UIImage.init(systemName: systemNameIcon), for: .normal)
         self.rightBarBtn.setTitle(" \(title)", for: .normal)
         self.rightBarBtn.setTitleColor(.systemBlue, for: .normal)
         self.rightBarBtn.titleLabel?.font = .systemFont(ofSize: 15)
         rightBarBtn.translatesAutoresizingMaskIntoConstraints = false
-        
-        self.scrollViewContainer.addSubview(self.rightBarBtn)
+        UIApplication.shared.windows.first(where: { $0.isKeyWindow })?.addSubview(self.rightBarBtn)
         self.rightBarBtn.isHidden = false
+        
         rightBarBtn.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20).isActive = true
-//        rightBarBtn.topAnchor.constraint(equalTo: scrollViewContainer.topAnchor, constant: -30).isActive = true
-        self.scrollViewContainer.bringSubviewToFront(rightBarBtn)
+        rightBarBtn.topAnchor.constraint(equalTo: view.topAnchor, constant: -30).isActive = true
+        
     }
+    
+    /// Handling UI for right navigation bar item programmatically
     fileprivate func setUIForOffline() {
         DispatchQueue.main.async {
             if DatabaseHelper.shareInstance.getLessonData().count == 0 {
@@ -213,11 +235,7 @@ class LessonDetailsViewController: UIViewController {
                         self.currentLesson?.description = item.lessonsDescription ?? ""
                         self.currentLesson?.id = Int(item.id ?? "-2") ?? -2
                         self.setUI()
-                        if self.isDownloading == false {
-                            self.rightBarBtn.isHidden = true
-                        } else {
-                            self.setRightNavBarBtn(title: "Cancel", systemNameIcon: "xmark.circle")
-                        }
+                        self.rightBarBtn.isHidden = true
                     } else {
                         self.setRightNavBarBtn(title: "Download", systemNameIcon: "icloud.and.arrow.down")
                     }
@@ -226,76 +244,22 @@ class LessonDetailsViewController: UIViewController {
         }
     }
     // MARK: - APIs
-    // MARK: Download File With asynchronous
-    func downloadFileAsync(url: URL,item: LessonsItem) {
-        let documentsUrl =  FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
-        let destinationUrl = documentsUrl.appendingPathComponent(url.lastPathComponent)
-        if FileManager().fileExists(atPath: destinationUrl.path) {
-            print("File already exists [\(destinationUrl.path)]")
-//            completion(destinationUrl.path, nil)
-            self.saveToOffline(destinationUrl.path, item: item)
-
-        } else {
-            self.setRightNavBarBtn(title: "Cancel", systemNameIcon: "xmark.circle")
-            self.isDownloading = true
-            let config = URLSessionConfiguration.background(withIdentifier: "id-background")
-            let session = URLSession(configuration: config, delegate: self, delegateQueue: nil)
-            var request = URLRequest(url: url)
-            request.httpMethod = "GET"
-            task = URLSession.shared.dataTask(with: request, completionHandler: { data, response, error in
-                if error == nil {
-                    if let response = response as? HTTPURLResponse {
-                        self.isDownloading = false
-                        print("Saved!!!")
-                        if response.statusCode == 200 {
-                            if let data = data {
-                                if let _ = try? data.write(to: destinationUrl, options: Data.WritingOptions.atomic) {
-//                                    completion(destinationUrl.path, error)
-                                    self.saveToOffline(destinationUrl.path, item: item)
-                                } else {
-//                                    completion(destinationUrl.path, error)
-                                    self.saveToOffline(destinationUrl.path, item: item)
-                                }
-                            } else {
-//                                completion(destinationUrl.path, error)
-                                self.saveToOffline(destinationUrl.path, item: item)
-                            }
-                        }
-                    }
-                } else {
-//                    completion(destinationUrl.path, error)
-//                    self.saveToOffline(destinationUrl.path, item: item)
-                }
-            })
-            task?.resume()
-        }
-    }
-
-
+    /// Cancel video API
     func cancel() {
         task?.cancel()
-        setRightNavBarBtn(title: "Download", systemNameIcon: "icloud.and.arrow.down")
+        self.setRightNavBarBtn(title: "Download", systemNameIcon: "icloud.and.arrow.down")
     }
+    
+    /// Save video in database
     fileprivate func saveToOffline(_ urlPath: String?, item: LessonsItem) {
-        print("URL Path-\(urlPath!)")
         let dict = ["id" : "\(item.id)",
                     "name" : item.name,
                     "lessonsDescription" : item.description,
                     "thumbnail" : item.thumbnail,
                     "videoUrl" : item.video_url
         ]
-        
-        print("Dict:- \(dict)")
         DatabaseHelper.shareInstance.save(object: dict)
         self.setUIForOffline()
     }
 }
 // MARK: - Extensions
-extension LessonDetailsViewController: URLSessionDelegate {
-    func urlSession(_ session: URLSession, didReceive challenge: URLAuthenticationChallenge, completionHandler: @escaping (URLSession.AuthChallengeDisposition, URLCredential?) -> Void) {
-        print("Saved Delegate call!!!")
-    }
-    func urlSessionDidFinishEvents(forBackgroundURLSession session: URLSession) {
-        print("Saved Delegate call!!!")
-    }
-}

@@ -6,9 +6,7 @@ target 'PhotoMasterclass' do
   use_frameworks!
 
   # Pods for PhotoMasterclass
-pod 'Alamofire', '~> 4.9'
 pod 'URLImage'
-pod 'ReachabilitySwift'
 
   target 'PhotoMasterclassTests' do
     inherit! :search_paths
