@@ -34,7 +34,7 @@ class LessonDetailsViewController: UIViewController {
     
     let avPlayerView: UIView = {
         let view = UIView()
-        view.heightAnchor.constraint(equalToConstant: 180).isActive = true
+        view.heightAnchor.constraint(equalToConstant: 210).isActive = true
         view.backgroundColor = .red
         return view
     }()
@@ -83,6 +83,8 @@ class LessonDetailsViewController: UIViewController {
     var lessonsList = [LessonsItem]()
     var currentLesson: LessonsItem?
     var isDownloading = false
+    var playerViewController = AVPlayerViewController()
+
     
     // MARK: - Life cycle
     
@@ -100,6 +102,7 @@ class LessonDetailsViewController: UIViewController {
         setUIForOffline()
     }
     override func viewWillDisappear(_ animated: Bool) {
+        playerViewController.player?.pause()
         self.rightBarBtn.isHidden = true
     }
     // MARK: - IBOutlets Action
@@ -168,7 +171,6 @@ class LessonDetailsViewController: UIViewController {
             return }
         
         let player = AVPlayer(url: videoUrl)
-        let playerViewController = AVPlayerViewController()
         playerViewController.view.frame = self.avPlayerView.bounds
         playerViewController.player = player
         
